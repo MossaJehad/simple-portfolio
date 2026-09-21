@@ -1,5 +1,6 @@
 import React from 'react';
 import { CornerBracket } from '../components/CornerBracket';
+import { SimpleLineChart } from '../components/SimpleLineChart';
 
 export const ResearchPage: React.FC = () => {
   return (
@@ -99,10 +100,10 @@ export const ResearchPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Visual Data Lab Card with Orb (Black #050505) */}
+        {/* Visual Data Lab Card with SimpleLineChart & Magnifying Glass */}
         <div className="relative group flex-1 bg-[#050505] rounded-[20px] p-5 sm:p-6 flex items-center justify-between min-h-[155px] overflow-hidden shadow-sm transition-transform duration-300 hover:-translate-y-1 select-none">
           <CornerBracket color="white" />
-          <div className="flex flex-col justify-end z-10 max-w-[200px]">
+          <div className="relative z-10 flex flex-col justify-end max-w-[190px] sm:max-w-[210px] pointer-events-none">
             <span className="font-mono text-[10.5px] text-sky-400 font-semibold uppercase tracking-wider">
               04 · Data & BI
             </span>
@@ -113,11 +114,7 @@ export const ResearchPage: React.FC = () => {
               SQL Server, Pandas, and executive Power BI dashboards.
             </div>
           </div>
-          <img
-            src="/images/orb.jpg"
-            alt="Spectral Study Orb"
-            className="max-h-[90px] w-auto object-contain mix-blend-screen scale-125 select-none pointer-events-none"
-          />
+          <SimpleLineChart />
         </div>
       </div>
     </section>
