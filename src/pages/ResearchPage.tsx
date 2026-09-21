@@ -101,9 +101,9 @@ export const ResearchPage: React.FC = () => {
         </div>
 
         {/* Visual Data Lab Card with SimpleLineChart & Magnifying Glass */}
-        <div className="relative group flex-1 bg-[#050505] rounded-[20px] p-5 sm:p-6 flex items-center justify-between min-h-[155px] overflow-hidden shadow-sm transition-transform duration-300 hover:-translate-y-1 select-none">
+        <div className="relative group flex-1 bg-[#050505] rounded-[20px] p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-2 min-h-[155px] overflow-hidden shadow-sm transition-transform duration-300 hover:-translate-y-1 select-none">
           <CornerBracket color="white" />
-          <div className="relative z-10 flex flex-col justify-end max-w-[190px] sm:max-w-[210px] pointer-events-none">
+          <div className="relative z-10 flex flex-col justify-end max-w-full sm:max-w-[170px] lg:max-w-[200px] pointer-events-none">
             <span className="font-mono text-[10.5px] text-sky-400 font-semibold uppercase tracking-wider">
               04 · Data & BI
             </span>

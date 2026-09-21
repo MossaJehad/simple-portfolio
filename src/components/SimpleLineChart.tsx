@@ -1,54 +1,63 @@
 import React, { useState, useRef, useCallback } from 'react';
 
+interface DataSkillPoint {
+  name: string;
+  x: number;
+  y: number;
+  label: string;
+}
+
 export const SimpleLineChart: React.FC = () => {
   const svgRef = useRef<SVGSVGElement>(null);
   const [isHovered, setIsHovered] = useState(false);
-  
-  // Default idle position over the chart peak in 260x110 viewBox
-  const [glassPos, setGlassPos] = useState({ x: 220, y: 35 });
-  const [metricValue, setMetricValue] = useState('99.9%');
 
-  // Chart path data (ViewBox: 0 0 260 110)
-  const linePath =
-    'M 10,84 C 35,84 45,66 60,66 C 75,66 85,76 100,76 C 120,76 130,42 145,42 C 160,42 170,56 185,56 C 205,56 215,22 230,22 C 242,22 248,27 255,27';
-  const areaPath = `${linePath} L 255,102 L 10,102 Z`;
-
-  // Milestone points along the curve
-  const milestones = [
-    { x: 10, y: 84, val: '84.2%' },
-    { x: 60, y: 66, val: '88.9%' },
-    { x: 100, y: 76, val: '87.3%' },
-    { x: 145, y: 42, val: '93.6%' },
-    { x: 185, y: 56, val: '92.1%' },
-    { x: 230, y: 22, val: '99.2%' },
-    { x: 255, y: 27, val: '99.9%' },
+  // 5 Data Skills along the progression curve
+  // ViewBox: 0 0 295 120
+  const skills: DataSkillPoint[] = [
+    { name: 'Excel', x: 26, y: 76, label: 'Excel' },
+    { name: 'SQL', x: 86, y: 60, label: 'SQL' },
+    { name: 'Python', x: 146, y: 44, label: 'Python' },
+    { name: 'PowerBI', x: 206, y: 28, label: 'PowerBI' },
+    { name: 'Data Analysis', x: 260, y: 16, label: 'Data Analysis' },
   ];
 
-  const updateCoordinates = useCallback((clientX: number, clientY: number) => {
-    if (!svgRef.current) return;
-    const rect = svgRef.current.getBoundingClientRect();
+  // Default idle position over the final peak milestone (Data Analysis)
+  const [glassPos, setGlassPos] = useState({ x: 260, y: 26 });
+  const [activeSkill, setActiveSkill] = useState<string>('Data Analysis');
 
-    // Map screen cursor coordinates into SVG viewBox (260 x 110)
-    const rawX = ((clientX - rect.left) / rect.width) * 260;
-    const rawY = ((clientY - rect.top) / rect.height) * 110;
+  // Smooth cubic bezier spline passing through the 5 skill milestones
+  const linePath =
+    'M 12,82 C 20,80 22,76 26,76 C 48,76 66,65 86,60 C 108,55 124,47 146,44 C 168,41 186,31 206,28 C 228,25 246,18 260,16 C 272,14 282,16 288,18';
+  const areaPath = `${linePath} L 288,94 L 12,94 Z`;
 
-    // Lens radius = 17.5, handle extends ~12px to bottom-right
-    // Clamping strictly within SVG bounds so it never leaves the card
-    const minX = 22;
-    const maxX = 260 - 28;
-    const minY = 22;
-    const maxY = 110 - 28;
+  const updateCoordinates = useCallback(
+    (clientX: number, clientY: number) => {
+      if (!svgRef.current) return;
+      const rect = svgRef.current.getBoundingClientRect();
 
-    const clampedX = Math.max(minX, Math.min(maxX, rawX));
-    const clampedY = Math.max(minY, Math.min(maxY, rawY));
+      // Normalize client coordinates to SVG viewBox (295 x 120)
+      const rawX = ((clientX - rect.left) / rect.width) * 295;
+      const rawY = ((clientY - rect.top) / rect.height) * 120;
 
-    setGlassPos({ x: clampedX, y: clampedY });
+      // Keep magnifying glass strictly clamped within the SVG / card boundaries
+      const minX = 20;
+      const maxX = 295 - 26;
+      const minY = 18;
+      const maxY = 120 - 26;
 
-    // Calculate dynamic telemetry based on X position
-    const ratio = Math.max(0, Math.min(1, (clampedX - minX) / (maxX - minX)));
-    const target = milestones[Math.min(milestones.length - 1, Math.floor(ratio * milestones.length))];
-    setMetricValue(target.val);
-  }, [milestones]);
+      const clampedX = Math.max(minX, Math.min(maxX, rawX));
+      const clampedY = Math.max(minY, Math.min(maxY, rawY));
+
+      setGlassPos({ x: clampedX, y: clampedY });
+
+      // Identify closest skill point based on X position
+      const closest = skills.reduce((prev, curr) =>
+        Math.abs(curr.x - clampedX) < Math.abs(prev.x - clampedX) ? curr : prev
+      );
+      setActiveSkill(closest.name);
+    },
+    [skills]
+  );
 
   const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
     setIsHovered(true);
@@ -62,9 +71,16 @@ export const SimpleLineChart: React.FC = () => {
 
   const handleMouseLeave = () => {
     setIsHovered(false);
-    // Smoothly return to the prominent peak of the chart
-    setGlassPos({ x: 220, y: 35 });
-    setMetricValue('99.9%');
+    // Smoothly return to the chart's peak (Data Analysis)
+    setGlassPos({ x: 260, y: 26 });
+    setActiveSkill('Data Analysis');
+  };
+
+  const handleTouchStart = (e: React.TouchEvent<SVGSVGElement>) => {
+    if (e.touches[0]) {
+      setIsHovered(true);
+      updateCoordinates(e.touches[0].clientX, e.touches[0].clientY);
+    }
   };
 
   const handleTouchMove = (e: React.TouchEvent<SVGSVGElement>) => {
@@ -78,38 +94,44 @@ export const SimpleLineChart: React.FC = () => {
     setIsHovered(false);
   };
 
-  // Lens radius and handle offsets
-  const lensRadius = 17.5;
-  const innerRadius = 15;
-  // 45 degrees offset: cos(45) * 17.5 ≈ 12.4
-  const handleStartX = glassPos.x + 12.4;
-  const handleStartY = glassPos.y + 12.4;
-  const handleEndX = glassPos.x + 24.5;
-  const handleEndY = glassPos.y + 24.5;
+  // Lens radius and handle vector calculations
+  const lensRadius = 17;
+  const innerRadius = 14.5;
+  // 45 degree angle for seamless handle connection
+  const handleStartX = glassPos.x + 12.0;
+  const handleStartY = glassPos.y + 12.0;
+  const handleEndX = glassPos.x + 23.5;
+  const handleEndY = glassPos.y + 23.5;
+
+  // Clamped tooltip badge horizontal position to prevent boundary clipping
+  const badgeHalfW = activeSkill.length > 8 ? 35 : 26;
+  const badgeX = Math.max(badgeHalfW + 3, Math.min(295 - badgeHalfW - 3, glassPos.x));
+  const badgeY = Math.max(10, glassPos.y - 23);
 
   return (
-    <div className="relative flex-1 w-full sm:w-[230px] lg:w-[260px] h-[100px] sm:h-[110px] flex items-center justify-end shrink-0 select-none">
+    <div className="relative w-full sm:w-[240px] md:w-[260px] lg:w-[290px] h-[110px] sm:h-[115px] flex items-center justify-center sm:justify-end shrink-0 select-none overflow-visible">
       <svg
         ref={svgRef}
-        viewBox="0 0 260 110"
-        className="w-full h-full cursor-crosshair overflow-hidden rounded-[16px]"
+        viewBox="0 0 295 120"
+        className="w-full h-full cursor-crosshair overflow-visible rounded-[14px]"
         preserveAspectRatio="xMidYMid meet"
         onMouseMove={handleMouseMove}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
+        onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
-        aria-label="Simple Line Chart with Interactive Magnifying Glass"
+        aria-label="Data Analytics Line Chart with PowerBI, Excel, SQL, Python, and Data Analysis milestones"
       >
         <defs>
-          {/* Horizontal Opacity Mask: exactly 70% opacity on the left to 100% on the right */}
+          {/* Opacity Mask: exactly 70% on left to 100% on right */}
           <linearGradient id="chartOpacityGrad" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.70" />
             <stop offset="100%" stopColor="#FFFFFF" stopOpacity="1.00" />
           </linearGradient>
 
           <mask id="graphOpacityMask">
-            <rect x="0" y="0" width="260" height="110" fill="url(#chartOpacityGrad)" />
+            <rect x="0" y="0" width="295" height="120" fill="url(#chartOpacityGrad)" />
           </mask>
 
           {/* Simple Gray Gradient for the Line */}
@@ -130,18 +152,18 @@ export const SimpleLineChart: React.FC = () => {
             <circle cx={glassPos.x} cy={glassPos.y} r={lensRadius} />
           </clipPath>
 
-          {/* Subtle Lens Drop Shadow Filter */}
+          {/* Lens Drop Shadow Filter */}
           <filter id="glassShadow" x="-30%" y="-30%" width="160%" height="160%">
             <feDropShadow dx="0" dy="1" stdDeviation="2" floodColor="#000000" floodOpacity="0.5" />
           </filter>
         </defs>
 
-        {/* 1. Base Graph Layer with 70% to 100% left-to-right opacity mask */}
+        {/* 1. Base Graph Layer (Masked 70% to 100% Opacity) */}
         <g mask="url(#graphOpacityMask)">
           {/* Subtle Horizontal Metric Gridlines */}
-          <line x1="10" y1="30" x2="255" y2="30" stroke="#52525B" strokeDasharray="3 4" strokeOpacity="0.3" />
-          <line x1="10" y1="60" x2="255" y2="60" stroke="#52525B" strokeDasharray="3 4" strokeOpacity="0.3" />
-          <line x1="10" y1="90" x2="255" y2="90" stroke="#52525B" strokeDasharray="3 4" strokeOpacity="0.3" />
+          <line x1="12" y1="28" x2="288" y2="28" stroke="#52525B" strokeDasharray="3 4" strokeOpacity="0.25" />
+          <line x1="12" y1="56" x2="288" y2="56" stroke="#52525B" strokeDasharray="3 4" strokeOpacity="0.25" />
+          <line x1="12" y1="84" x2="288" y2="84" stroke="#52525B" strokeDasharray="3 4" strokeOpacity="0.25" />
 
           {/* Shaded Area Under Curve */}
           <path d={areaPath} fill="url(#grayAreaGrad)" />
@@ -151,22 +173,58 @@ export const SimpleLineChart: React.FC = () => {
             d={linePath}
             fill="none"
             stroke="url(#grayLineGrad)"
-            strokeWidth="2.5"
+            strokeWidth="2.4"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
 
-          {/* Milestone Data Points */}
-          {milestones.map((pt, i) => (
-            <circle
-              key={i}
-              cx={pt.x}
-              cy={pt.y}
-              r={i === milestones.length - 1 ? 3.5 : 2.2}
-              fill={i === milestones.length - 1 ? '#FFFFFF' : '#D1D5DB'}
-              opacity={0.85}
-            />
-          ))}
+          {/* Milestone Node Dots */}
+          {skills.map((skill) => {
+            const isActive = activeSkill === skill.name;
+            return (
+              <g key={skill.name}>
+                <circle
+                  cx={skill.x}
+                  cy={skill.y}
+                  r={isActive ? 3.8 : 2.5}
+                  fill={isActive ? '#FFFFFF' : '#D1D5DB'}
+                  opacity={isActive ? 1 : 0.8}
+                  className="transition-all duration-150"
+                />
+                {isActive && (
+                  <circle
+                    cx={skill.x}
+                    cy={skill.y}
+                    r={6}
+                    fill="none"
+                    stroke="#FFFFFF"
+                    strokeWidth="0.8"
+                    opacity={0.5}
+                  />
+                )}
+              </g>
+            );
+          })}
+
+          {/* X-Axis Data Skill Labels along the bottom */}
+          {skills.map((skill) => {
+            const isActive = activeSkill === skill.name;
+            return (
+              <text
+                key={skill.name}
+                x={skill.x}
+                y="110"
+                textAnchor="middle"
+                fontSize="7.5"
+                fontFamily="monospace"
+                fontWeight={isActive ? '700' : '500'}
+                fill={isActive ? '#FFFFFF' : '#9CA3AF'}
+                className="transition-colors duration-150 pointer-events-none"
+              >
+                {skill.label}
+              </text>
+            );
+          })}
         </g>
 
         {/* 2. Magnified Lens View: Zoomed 1.35x Directly Underneath Lens */}
@@ -176,7 +234,7 @@ export const SimpleLineChart: React.FC = () => {
             cx={glassPos.x}
             cy={glassPos.y}
             r={lensRadius}
-            fill="rgba(255, 255, 255, 0.05)"
+            fill="rgba(255, 255, 255, 0.06)"
           />
 
           {/* Magnified Chart Curve centered at current lens position */}
@@ -211,17 +269,17 @@ export const SimpleLineChart: React.FC = () => {
             cy={glassPos.y}
             r={innerRadius}
             fill="none"
-            stroke="rgba(255, 255, 255, 0.45)"
+            stroke="rgba(255, 255, 255, 0.5)"
             strokeWidth="1"
           />
 
-          {/* Subtle Lens Center Reticle & Focal Point */}
+          {/* Center Reticle & Focal Point */}
           <line
             x1={glassPos.x - 3}
             y1={glassPos.y}
             x2={glassPos.x + 3}
             y2={glassPos.y}
-            stroke="rgba(255, 255, 255, 0.7)"
+            stroke="rgba(255, 255, 255, 0.75)"
             strokeWidth="0.9"
           />
           <line
@@ -229,10 +287,10 @@ export const SimpleLineChart: React.FC = () => {
             y1={glassPos.y - 3}
             x2={glassPos.x}
             y2={glassPos.y + 3}
-            stroke="rgba(255, 255, 255, 0.7)"
+            stroke="rgba(255, 255, 255, 0.75)"
             strokeWidth="0.9"
           />
-          <circle cx={glassPos.x} cy={glassPos.y} r="1.3" fill="#FFFFFF" opacity="0.9" />
+          <circle cx={glassPos.x} cy={glassPos.y} r="1.3" fill="#FFFFFF" opacity="0.95" />
 
           {/* Seamless Handle in Simple Gray connected at 45 degrees */}
           <line
@@ -245,8 +303,8 @@ export const SimpleLineChart: React.FC = () => {
             strokeLinecap="round"
           />
           <line
-            x1={handleStartX + 2}
-            y1={handleStartY + 2}
+            x1={handleStartX + 1.8}
+            y1={handleStartY + 1.8}
             x2={handleEndX - 1}
             y2={handleEndY - 1}
             stroke="#E5E7EB"
@@ -255,16 +313,16 @@ export const SimpleLineChart: React.FC = () => {
           />
         </g>
 
-        {/* 4. Minimalist Simple Gray Telemetry Callout Badge */}
+        {/* 4. Active Skill Callout Tooltip Badge */}
         <g
-          transform={`translate(${glassPos.x}, ${Math.max(12, glassPos.y - 24)})`}
+          transform={`translate(${badgeX}, ${badgeY})`}
           className={isHovered ? 'transition-none' : 'transition-all duration-300 ease-out'}
         >
           {/* Badge pill background in dark gray */}
           <rect
-            x="-24"
+            x={activeSkill.length > 8 ? -35 : -26}
             y="-8"
-            width="48"
+            width={activeSkill.length > 8 ? 70 : 52}
             height="15"
             rx="4"
             fill="#18181B"
@@ -276,12 +334,12 @@ export const SimpleLineChart: React.FC = () => {
             x="0"
             y="2.5"
             textAnchor="middle"
-            fill="#E4E4E7"
-            fontSize="8.5"
+            fill="#F4F4F5"
+            fontSize="8"
             fontFamily="monospace"
             fontWeight="600"
           >
-            {metricValue}
+            {activeSkill}
           </text>
         </g>
       </svg>
