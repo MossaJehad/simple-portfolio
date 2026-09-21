@@ -15,19 +15,19 @@ export const PortfolioPage: React.FC = () => {
       {/* Right Portfolio Content Grid */}
       <section
         aria-label="Portfolio Showcase"
-        className="flex-1 flex flex-col justify-between gap-[14px] min-w-0"
+        className="flex-1 flex flex-col gap-[14px] min-w-0"
       >
         {/* Dominant "Portfolio" Heading */}
         <PortfolioHeader />
 
-        {/* Middle Row: Flamingo Feature Card + Single Vertical Stats Pill */}
-        <div className="flex flex-col sm:flex-row gap-[14px] items-stretch">
+        {/* Middle Row: Featured Project Card + Single Vertical Stats Pill */}
+        <div className="flex-1 flex flex-col sm:flex-row gap-[14px] items-stretch">
           <FeatureCard />
           <StatsColumn />
         </div>
 
         {/* Bottom Bento Row: Clients Card + Single Horizontal Orb / Awards Pill */}
-        <div className="flex flex-col sm:flex-row gap-[12px] items-stretch">
+        <div className="flex-1 flex flex-col sm:flex-row gap-[14px] items-stretch">
           <ClientsCard />
           <OrbAwardsPill />
         </div>

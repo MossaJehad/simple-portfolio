@@ -29,7 +29,7 @@ export const PortfolioBoard: React.FC = () => {
           {/* Top Dominant Title */}
           <PortfolioHeader />
 
-          {/* Middle Row: Feature Flamingo Card + Project/Award Stats */}
+          {/* Middle Row: Featured Project Card + Project/Award Stats */}
           <div className="flex flex-col sm:flex-row gap-[14px] items-stretch">
             <FeatureCard />
             <StatsColumn />

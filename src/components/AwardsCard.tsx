@@ -8,10 +8,10 @@ export const AwardsCard: React.FC = () => {
 
       <div className="flex flex-col items-start justify-end">
         <div className="font-syne font-extrabold text-[#111111] text-[38px] sm:text-[42px] leading-none">
-          172
+          3
         </div>
         <div className="font-dmsans font-semibold text-[#111111] text-[15px] sm:text-[17px] leading-[1.18] mt-1.5">
-          Global Design<br />Awards.
+          Platforms<br />Web · iOS · Android
         </div>
       </div>
     </div>

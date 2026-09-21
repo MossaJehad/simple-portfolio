@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { VerticalNavigation } from './VerticalNavigation';
+import { VerticalNavigation, MobileNavigation } from './VerticalNavigation';
 
 interface PortfolioLayoutProps {
   children: React.ReactNode;
@@ -10,11 +10,14 @@ export const PortfolioLayout: React.FC<PortfolioLayoutProps> = ({ children }) =>
   const location = useLocation();
 
   return (
-    <div className="w-full flex items-center justify-center py-4 sm:py-8 px-2 sm:px-4 select-none">
+    <div className="w-full flex items-center justify-center py-2 sm:py-8 px-1.5 sm:px-4 select-none">
       {/* Persistent White Board Presentation Container */}
-      <main className="relative w-full max-w-[1140px] bg-white rounded-[28px] p-[18px] sm:p-[22px] shadow-[0_40px_100px_rgba(0,0,0,0.17),0_8px_24px_rgba(0,0,0,0.07)] overflow-hidden">
+      <main className="relative w-full max-w-[1140px] bg-white rounded-[22px] sm:rounded-[28px] p-3 sm:p-[18px] md:p-[22px] shadow-[0_20px_60px_rgba(0,0,0,0.12),0_8px_24px_rgba(0,0,0,0.07)] overflow-hidden">
+        {/* Mobile Top Navigation Tabs */}
+        <MobileNavigation />
+
         <div className="flex flex-col md:flex-row items-stretch gap-[14px] lg:gap-[16px]">
-          {/* Persistent Leftmost Vertical Navigation */}
+          {/* Persistent Leftmost Vertical Navigation (Desktop) */}
           <VerticalNavigation />
 
           {/* Page Content with Subtle Smooth Transition */}

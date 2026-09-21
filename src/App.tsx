@@ -13,8 +13,11 @@ export const App: React.FC = () => {
         <Routes>
           <Route path="/" element={<PortfolioPage />} />
           <Route path="/portfolio" element={<PortfolioPage />} />
-          <Route path="/research" element={<ResearchPage />} />
+          <Route path="/experience" element={<ClientsPage />} />
           <Route path="/clients" element={<ClientsPage />} />
+          <Route path="/skills" element={<ResearchPage />} />
+          <Route path="/research" element={<ResearchPage />} />
+          <Route path="/projects" element={<PodcastPage />} />
           <Route path="/podcast" element={<PodcastPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
