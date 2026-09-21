@@ -1,21 +1,17 @@
 import React from 'react';
 import { CornerBracket } from './CornerBracket';
+import { RetroTerminal } from './RetroTerminal';
 
 export const OrbAwardsPill: React.FC = () => {
   return (
     <div className="awards-pill relative flex-1 flex flex-row rounded-[20px] overflow-hidden min-h-[145px] sm:min-h-[155px] md:min-h-[165px] h-full shadow-sm transition-transform duration-300 hover:-translate-y-1 select-none">
-      {/* Left: Orb Section (Pure Black #050505) */}
-      <div className="orb-section relative w-[38%] sm:w-[40%] lg:w-[42%] bg-[#050505] flex items-center justify-center overflow-hidden p-2">
-        <CornerBracket color="white" />
-        <img
-          src="/images/orb.jpg"
-          alt="Iridescent Spectrum Sphere"
-          className="max-h-[72px] sm:max-h-[80px] lg:max-h-[86px] w-auto object-contain mix-blend-screen scale-125 transition-transform duration-500 ease-out hover:scale-135 select-none pointer-events-none"
-        />
+      {/* Left: Retro CRT Terminal with Fish Eye Effect */}
+      <div className="terminal-section relative w-[52%] sm:w-[54%] lg:w-[56%] bg-[#030704] flex items-stretch p-1.5 sm:p-2 overflow-hidden">
+        <RetroTerminal />
       </div>
 
       {/* Right: Platforms Shipped Section (Yellow #FFC368) */}
-      <div className="global-awards-section relative w-[62%] sm:w-[60%] lg:w-[58%] bg-[#FFC368] p-3.5 sm:p-4 lg:p-5 xl:p-6 flex flex-col justify-end">
+      <div className="global-awards-section relative w-[48%] sm:w-[46%] lg:w-[44%] bg-[#FFC368] p-3.5 sm:p-4 lg:p-5 xl:p-6 flex flex-col justify-end">
         <CornerBracket color="dark" />
         <div className="flex flex-col items-start justify-end">
           <div className="font-syne font-extrabold text-[#111111] text-[32px] sm:text-[36px] lg:text-[40px] xl:text-[42px] leading-none">
