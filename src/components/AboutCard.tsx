@@ -145,46 +145,66 @@ export const AboutCard: React.FC = () => {
               </div>
             </div>
 
-            {/* Rotating Vinyl Record Badge */}
+            {/* Rotating Vinyl Record Badge (High-res SVG with geometricPrecision) */}
             <div
-              className="relative w-[66px] h-[66px] lg:w-[76px] lg:h-[76px] xl:w-[78px] xl:h-[78px] shrink-0 flex items-center justify-center select-none"
+              className="relative w-[66px] h-[66px] lg:w-[76px] lg:h-[76px] xl:w-[78px] xl:h-[78px] shrink-0 flex items-center justify-center select-none rounded-full shadow-[0_8px_20px_rgba(0,0,0,0.35)]"
               title="Mousa Hasoneh · Software Engineer"
             >
               <svg
-                viewBox="0 0 100 100"
-                className="w-full h-full animate-vinyl-spin origin-center drop-shadow-md"
+                viewBox="0 0 300 300"
+                className="w-full h-full animate-vinyl-spin origin-center"
+                shapeRendering="geometricPrecision"
+                textRendering="geometricPrecision"
                 aria-label="Mousa Hasoneh Software Engineer Vinyl Record Badge"
               >
                 {/* Outer Vinyl Body */}
-                <circle cx="50" cy="50" r="48" fill="#111111" />
+                <circle cx="150" cy="150" r="146" fill="#0C0C0D" />
+                <circle cx="150" cy="150" r="146" fill="none" stroke="#222226" strokeWidth="2" />
 
-                {/* Vinyl Grooves */}
-                <circle cx="50" cy="50" r="42" fill="none" stroke="#262626" strokeWidth="0.8" />
-                <circle cx="50" cy="50" r="36" fill="none" stroke="#202020" strokeWidth="0.8" />
-                <circle cx="50" cy="50" r="28" fill="none" stroke="#262626" strokeWidth="0.8" />
-                <circle cx="50" cy="50" r="21" fill="none" stroke="#1c1c1c" strokeWidth="0.8" />
+                {/* Outer Fine Vinyl Grooves */}
+                <circle cx="150" cy="150" r="138" fill="none" stroke="#1C1C20" strokeWidth="1.2" />
+                <circle cx="150" cy="150" r="130" fill="none" stroke="#25252A" strokeWidth="1.4" />
+                <circle cx="150" cy="150" r="122" fill="none" stroke="#1A1A1E" strokeWidth="1.2" />
 
-                {/* Circular Path for Text */}
+                {/* Inner Fine Vinyl Grooves */}
+                <circle cx="150" cy="150" r="88" fill="none" stroke="#222226" strokeWidth="1.2" />
+                <circle cx="150" cy="150" r="80" fill="none" stroke="#1A1A1D" strokeWidth="1.2" />
+                <circle cx="150" cy="150" r="70" fill="none" stroke="#242429" strokeWidth="1.2" />
+                <circle cx="150" cy="150" r="60" fill="none" stroke="#1A1A1D" strokeWidth="1.2" />
+                <circle cx="150" cy="150" r="50" fill="none" stroke="#222226" strokeWidth="1.2" />
+
+                {/* Subtle Vinyl Grooves Radial Light Sheen */}
+                <path d="M 150,150 L 50,50 A 146,146 0 0,1 110,14 Z" fill="#FFFFFF" opacity="0.035" />
+                <path d="M 150,150 L 250,250 A 146,146 0 0,1 190,286 Z" fill="#FFFFFF" opacity="0.035" />
+
+                {/* Seamless Circular Path for Text */}
                 <defs>
                   <path
                     id="vinylTextPath"
-                    d="M 50,82 a 32,32 0 1,1 0.1,0"
+                    d="M 44,150 a 106,106 0 1,1 212,0 a 106,106 0 1,1 -212,0"
                     fill="none"
                   />
                 </defs>
 
-                {/* Text around circle */}
+                {/* Text along 360 circle with mathematically balanced spacing */}
                 <text
-                  className="text-[7.2px] fill-[#F1F1F5] font-syne font-bold uppercase tracking-[0.16em]"
+                  fill="#F4F4F5"
+                  fontSize="17.5"
+                  fontFamily="Syne, sans-serif"
+                  fontWeight="700"
+                  textLength="666"
+                  lengthAdjust="spacing"
                 >
-                  <textPath href="#vinylTextPath" startOffset="50%" textAnchor="middle">
-                    MOUSA HASONEH · SOFTWARE ENGINEER ·
+                  <textPath href="#vinylTextPath">
+                    MOUSA HASONEH · SOFTWARE ENGINEER ·&#160;
                   </textPath>
                 </text>
 
                 {/* Center Record Label & Spindle Hole */}
-                <circle cx="50" cy="50" r="9" fill="#FFFFFF" />
-                <circle cx="50" cy="50" r="2.6" fill="#111111" />
+                <circle cx="150" cy="150" r="32" fill="#FFFFFF" />
+                <circle cx="150" cy="150" r="28" fill="none" stroke="#E5E7EB" strokeWidth="1.2" />
+                <circle cx="150" cy="150" r="8" fill="#0C0C0D" />
+                <circle cx="150" cy="150" r="9.5" fill="none" stroke="#D1D5DB" strokeWidth="1.2" />
               </svg>
             </div>
           </div>
