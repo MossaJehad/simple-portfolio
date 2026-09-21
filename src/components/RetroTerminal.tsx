@@ -119,27 +119,15 @@ export const RetroTerminal: React.FC = () => {
         }, 220);
       }
     } else if (phase === 'waiting') {
-      // Execute command: add to history
-      setHistory((prev) => {
-        // Keep at most 2 previous commands so screen never gets overcrowded
-        const next = [...prev, { command: currentDef.command, output: currentDef.output }];
-        return next.length > 2 ? next.slice(next.length - 2) : next;
-      });
+      // Execute command: retain only the latest command to keep screen completely stable
+      setHistory([{ command: currentDef.command, output: currentDef.output }]);
       setTypedChars('');
       setPhase('reading');
     } else if (phase === 'reading') {
       // Pause so the visitor can read the result
       const holdTime = currentDef.holdMs || 2500;
       timeoutRef.current = setTimeout(() => {
-        // Clear history periodically or wrap around
-        setCmdIndex((prev) => {
-          const nextIndex = (prev + 1) % COMMAND_SEQUENCE.length;
-          // If we wrapped around or reached 3 entries, clear history
-          if (nextIndex === 0 || (prev + 1) % 3 === 0) {
-            setHistory([]);
-          }
-          return nextIndex;
-        });
+        setCmdIndex((prev) => (prev + 1) % COMMAND_SEQUENCE.length);
         setTypedChars('');
         setPhase('typing');
       }, holdTime);
@@ -204,7 +192,7 @@ export const RetroTerminal: React.FC = () => {
       />
 
       {/* 2. Vintage CRT Bezel Top Bar */}
-      <div className="relative z-10 px-2.5 pt-2 pb-1 flex items-center justify-between border-b border-emerald-950/50 bg-black/40 text-[9px] font-mono tracking-wider">
+      <div className="relative z-10 px-2.5 pt-2 pb-1 flex items-center justify-between border-b border-emerald-950/50 bg-black/40 text-[9px] font-mono tracking-wider shrink-0">
         <div className="flex items-center gap-1.5">
           <span className="w-1.5 h-1.5 rounded-full bg-red-500/80 inline-block" />
           <span className="w-1.5 h-1.5 rounded-full bg-amber-500/80 inline-block" />
@@ -224,7 +212,7 @@ export const RetroTerminal: React.FC = () => {
       {/* 3. CRT Terminal Viewport with Fisheye Barrel Distortion */}
       <div
         ref={scrollRef}
-        className="relative z-10 flex-1 p-2.5 overflow-hidden font-mono text-[9.5px] sm:text-[10px] leading-[1.38] text-emerald-400 space-y-1.5"
+        className="relative z-10 flex-1 min-h-0 p-2 sm:p-2.5 overflow-hidden font-mono text-[9.5px] sm:text-[10px] leading-[1.38] text-emerald-400 space-y-1.5"
         style={{
           // Authentic retro phosphor glow with subtle chromatic fringe
           textShadow:
@@ -268,7 +256,7 @@ export const RetroTerminal: React.FC = () => {
       </div>
 
       {/* 4. Bottom CRT Tube Reflection Rim */}
-      <div className="relative z-10 px-2.5 py-0.5 bg-black/60 border-t border-emerald-950/40 flex items-center justify-between text-[7.5px] font-mono text-emerald-500/50">
+      <div className="relative z-10 px-2.5 py-0.5 bg-black/60 border-t border-emerald-950/40 flex items-center justify-between text-[7.5px] font-mono text-emerald-500/50 shrink-0">
         <span>ZSH 5.9</span>
         <span>BAUD: 9600</span>
       </div>

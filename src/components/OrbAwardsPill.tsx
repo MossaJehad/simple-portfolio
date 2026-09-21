@@ -5,9 +5,11 @@ import { RetroTerminal } from './RetroTerminal';
 export const OrbAwardsPill: React.FC = () => {
   return (
     <div className="awards-pill relative flex-1 flex flex-row rounded-[20px] overflow-hidden min-h-[145px] sm:min-h-[155px] md:min-h-[165px] h-full shadow-sm transition-transform duration-300 hover:-translate-y-1 select-none">
-      {/* Left: Retro CRT Terminal with Fish Eye Effect */}
-      <div className="terminal-section relative w-[52%] sm:w-[54%] lg:w-[56%] bg-[#030704] flex items-stretch p-1.5 sm:p-2 overflow-hidden">
-        <RetroTerminal />
+      {/* Left: Retro CRT Terminal with Fish Eye Effect (Fixed bounded container) */}
+      <div className="terminal-section relative w-[52%] sm:w-[54%] lg:w-[56%] bg-[#030704] overflow-hidden">
+        <div className="absolute inset-1.5 sm:inset-2">
+          <RetroTerminal />
+        </div>
       </div>
 
       {/* Right: Platforms Shipped Section (Yellow #FFC368) */}
