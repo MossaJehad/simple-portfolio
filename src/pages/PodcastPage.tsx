@@ -3,7 +3,7 @@ import { CornerBracket } from '../components/CornerBracket';
 
 export const PodcastPage: React.FC = () => {
   return (
-    <section aria-label="Featured Engineering Projects" className="flex-1 flex flex-col justify-between gap-[14px] min-w-0">
+    <section aria-label="Featured Engineering Projects" className="flex-1 flex flex-col justify-start md:justify-between gap-[14px] min-w-0">
       {/* Top Heading + Subtitle */}
       <header className="relative flex items-start justify-between w-full select-none pt-0.5 pb-1 pr-1">
         <div>

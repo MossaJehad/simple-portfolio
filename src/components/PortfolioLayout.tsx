@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { VerticalNavigation, MobileNavigation } from './VerticalNavigation';
 
@@ -9,8 +9,13 @@ interface PortfolioLayoutProps {
 export const PortfolioLayout: React.FC<PortfolioLayoutProps> = ({ children }) => {
   const location = useLocation();
 
+  // Ensure view resets to top when switching tabs on smaller screens
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [location.pathname]);
+
   return (
-    <div className="w-full flex items-center justify-center py-2 sm:py-8 px-1.5 sm:px-4 select-none">
+    <div className="w-full flex flex-col items-center justify-start md:justify-center py-2 sm:py-8 px-1.5 sm:px-4 select-none">
       {/* Persistent White Board Presentation Container */}
       <main className="relative w-full max-w-[1140px] bg-white rounded-[22px] sm:rounded-[28px] p-3 sm:p-[18px] md:p-[22px] shadow-[0_20px_60px_rgba(0,0,0,0.12),0_8px_24px_rgba(0,0,0,0.07)] overflow-hidden">
         {/* Mobile Top Navigation Tabs */}
