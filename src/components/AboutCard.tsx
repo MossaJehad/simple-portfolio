@@ -58,7 +58,7 @@ export const AboutCard: React.FC = () => {
             {/* Profile Photo Circular Crop */}
             <div className="relative z-10 w-[142px] h-[142px] lg:w-[168px] lg:h-[168px] rounded-full border-[3.5px] border-white shadow-xl overflow-hidden bg-neutral-200">
               <img
-                src="/images/avatar.jpg"
+                src={`${import.meta.env.BASE_URL}images/avatar.jpg`}
                 alt="Mousa Hasoneh"
                 className="w-full h-full object-cover object-[50%_25%] select-none pointer-events-none"
               />
@@ -132,7 +132,7 @@ export const AboutCard: React.FC = () => {
                   </svg>
                 </a>
                 <a
-                  href="/Mousa Hasoneh.pdf"
+                  href={`${import.meta.env.BASE_URL}Mousa Hasoneh.pdf`}
                   download
                   className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-white/15 hover:bg-white/25 text-white text-[10.5px] lg:text-[11px] font-dmsans font-medium transition-colors"
                   title="Download Resume"

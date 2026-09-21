@@ -8,8 +8,20 @@
     <meta name="description" content="Software Engineer specializing in the React ecosystem (React, React Native, and Next.js) with a strong foundation in backend development, systems programming, and data analytics." />
     <meta name="author" content="Mousa Hasoneh" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Syne:wght@400..800&display=swap" rel="stylesheet">
+    <!-- GitHub Pages Single Page App routing support -->
+    <script type="text/javascript">
+      (function(l) {
+        if (l.search[1] === '/' ) {
+          var decoded = l.search.slice(1).split('&').map(function(s) { 
+            return s.replace(/~and~/g, '&')
+          }).join('?');
+          window.history.replaceState(null, null,
+              l.pathname.slice(0, -1) + decoded + l.hash
+          );
+        }
+      }(window.location))
+    </script>
   </head>
   <body class="bg-[#E2E2EA] font-dmsans text-[#111111] antialiased min-h-screen flex flex-col items-center justify-start md:justify-center p-2.5 sm:p-6 md:p-8">
     <div id="root" class="w-full flex items-center justify-center"></div>
