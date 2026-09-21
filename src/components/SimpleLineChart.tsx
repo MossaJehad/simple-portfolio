@@ -11,23 +11,23 @@ export const SimpleLineChart: React.FC = () => {
   const svgRef = useRef<SVGSVGElement>(null);
   const [isHovered, setIsHovered] = useState(false);
 
-  // 5 Data Skills along the progression curve
+  // 5 Data Skills along the progression curve with realistic ups and downs
   // ViewBox: 0 0 295 120
   const skills: DataSkillPoint[] = [
-    { name: 'Excel', x: 26, y: 76, label: 'Excel' },
-    { name: 'SQL', x: 86, y: 60, label: 'SQL' },
-    { name: 'Python', x: 146, y: 44, label: 'Python' },
-    { name: 'PowerBI', x: 206, y: 28, label: 'PowerBI' },
-    { name: 'Data Analysis', x: 260, y: 16, label: 'Data Analysis' },
+    { name: 'Excel', x: 26, y: 58, label: 'Excel' },
+    { name: 'SQL', x: 86, y: 36, label: 'SQL' },
+    { name: 'Python', x: 146, y: 28, label: 'Python' },
+    { name: 'PowerBI', x: 206, y: 38, label: 'PowerBI' },
+    { name: 'Data Analysis', x: 260, y: 20, label: 'Data Analysis' },
   ];
 
   // Default idle position over the final peak milestone (Data Analysis)
-  const [glassPos, setGlassPos] = useState({ x: 260, y: 26 });
+  const [glassPos, setGlassPos] = useState({ x: 260, y: 20 });
   const [activeSkill, setActiveSkill] = useState<string>('Data Analysis');
 
-  // Smooth cubic bezier spline passing through the 5 skill milestones
+  // Dynamic cubic bezier spline with authentic peaks and valleys (ups & downs)
   const linePath =
-    'M 12,82 C 20,80 22,76 26,76 C 48,76 66,65 86,60 C 108,55 124,47 146,44 C 168,41 186,31 206,28 C 228,25 246,18 260,16 C 272,14 282,16 288,18';
+    'M 12,70 C 14.3,68.0 18.7,57.0 26,58 C 33.3,59.0 46.0,79.7 56,76 C 66.0,72.3 75.7,38.3 86,36 C 96.3,33.7 108.0,63.3 118,62 C 128.0,60.7 136.0,29.3 146,28 C 156.0,26.7 168.0,52.3 178,54 C 188.0,55.7 196.7,39.3 206,38 C 215.3,36.7 225.0,49.0 234,46 C 243.0,43.0 251.0,23.7 260,20 C 269.0,16.3 283.3,23.3 288,24';
   const areaPath = `${linePath} L 288,94 L 12,94 Z`;
 
   const updateCoordinates = useCallback(
@@ -42,7 +42,7 @@ export const SimpleLineChart: React.FC = () => {
       // Keep magnifying glass strictly clamped within the SVG / card boundaries
       const minX = 20;
       const maxX = 295 - 26;
-      const minY = 18;
+      const minY = 16;
       const maxY = 120 - 26;
 
       const clampedX = Math.max(minX, Math.min(maxX, rawX));
@@ -72,7 +72,7 @@ export const SimpleLineChart: React.FC = () => {
   const handleMouseLeave = () => {
     setIsHovered(false);
     // Smoothly return to the chart's peak (Data Analysis)
-    setGlassPos({ x: 260, y: 26 });
+    setGlassPos({ x: 260, y: 20 });
     setActiveSkill('Data Analysis');
   };
 
